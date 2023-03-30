@@ -119,6 +119,7 @@ function TripsOverview() {
           show={showCreate}
           handleClose={handleClose}
           handleShow={handleShow}
+          fetchData={fetchData}
         />
         {tripToDelete && (
           <DeleteTripModal
