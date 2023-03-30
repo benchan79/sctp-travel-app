@@ -13,15 +13,27 @@ function TripDetails() {
 
   const onAddDestination = (dayNumber, destinations) => {};
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const destinations = await ItineraryService.getItineraryItems(index);
+  //     const itinerary = await ItineraryService.getItinerary(index);
+  //     setItinerary(itinerary);
+  //     setDestinationList(destinations);
+  //   };
+  //   fetchData();
+  // }, [index]);
+
+  const fetchData = async () => {
+    const destinations = await ItineraryService.getItineraryItems(index);
+    const itinerary = await ItineraryService.getItinerary(index);
+    setItinerary(itinerary);
+    setDestinationList(destinations);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const destinations = await ItineraryService.getItineraryItems(index);
-      const itinerary = await ItineraryService.getItinerary(index);
-      setItinerary(itinerary);
-      setDestinationList(destinations);
-    };
     fetchData();
-  }, [index]);
+  }, []);
+
 
   const handleClick = async () => {
     const destinations = await ItineraryService.getItineraryItems(index);
@@ -41,10 +53,18 @@ function TripDetails() {
   });
   const dayCount = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
 
+  function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
   for (let i = 1; i <= dayCount; i++) {
     days.push({
       dayNumber: i,
       itineraryItem: itineraryItemList[i - 1],
+      date: addDays(start, i - 1),
+      itineraryId: index
     });
   }
 
@@ -79,6 +99,9 @@ function TripDetails() {
                   dayNumber={day?.dayNumber}
                   key={day?.dayNumber}
                   {...day?.itineraryItem}
+                  date={day?.date}
+                  itineraryId={day?.itineraryId}
+                  fetchData={fetchData}
                 />
               ))}
             </div>

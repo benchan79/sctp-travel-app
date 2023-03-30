@@ -2,10 +2,14 @@ import { Button, Card } from "react-bootstrap";
 import { useState } from "react";
 import itineraryService from "../api/ItineraryControllerAPI";
 
-function ItemCard({ item, altText, itemType, itineraryItemId }) {
+import AddDestinationModal from "./AddDestinationModal";
+
+function ItemCard({ item, altText, itemType, itineraryItemId, itineraryId, date, fetchData }) {
 
   const [showButtons, setShowButtons] = useState(false);
   const [type, setType] = useState(itemType);
+
+  const [showCreate, setShowCreate] = useState(false);
 
   function handleMouseEnter() {
     setShowButtons(true);
@@ -42,17 +46,37 @@ function ItemCard({ item, altText, itemType, itineraryItemId }) {
     console.log("edit");
   }
 
+  const handleClose = (update) => {
+    if (update) {
+      fetchData();
+    }
+    setShowCreate(false);
+  };
+
+  const handleShow = () => setShowCreate(true);
+
   return (
     <Card className="shadow border h-100 m-1">
       {item == null || typeof item === 'undefined' || typeof type === 'undefined' ? (
         <div className="h-100" >
-          <div className="h-100 container d-flex rounded justify-content-center align-items-center border border-primary">
+          <div className="h-100 container d-flex rounded justify-content-center align-items-center border border-primary" onClick={handleShow}>
             <div className="align-items-center text-center ">
               {altText}
               <h2 className="bi bi-plus-lg"></h2>
             </div>
           </div>
+          {itemType === "destination" && (
+            <AddDestinationModal 
+              show={showCreate}
+              handleClose={handleClose}
+              handleShow={handleShow}
+              itineraryId={itineraryId}
+              date={date}
+              fetchData={fetchData}
+            />
+          )}  
         </div>
+
       ) : (
         <div
           className="w-100 h-100"

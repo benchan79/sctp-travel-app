@@ -95,7 +95,26 @@ const itineraryService = {
     } catch (error) {
       console.log(error.message);
     }
-  }
+  },
+  async getAllDestinations() {
+    const response = await itineraryApi.get("/itineraries/destinations");
+    let destinationList = [];
+    response.data.map((destination) =>
+      destinationList.push({
+        value: destination.id,
+        label: destination.name
+      })
+    )
+    return destinationList;
+  },
+  async getAllAccommodations() {
+    const response = await itineraryApi.get("/itineraries/accommodations");
+    return response.data;
+  },
+  async getAllTransports() {
+    const response = await itineraryApi.get("/itineraries/transports");
+    return response.data;
+  },
 };
 
 export default itineraryService;
