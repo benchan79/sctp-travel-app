@@ -45,14 +45,14 @@ function ItemCard({ item, altText, itemType, itineraryItemId }) {
   return (
     <Card className="shadow border h-100 m-1">
       {item == null || typeof item === 'undefined' || typeof type === 'undefined' ? (
-        <a href="#" className="h-100">
+        <div className="h-100" >
           <div className="h-100 container d-flex rounded justify-content-center align-items-center border border-primary">
             <div className="align-items-center text-center ">
               {altText}
               <h2 className="bi bi-plus-lg"></h2>
             </div>
           </div>
-        </a>
+        </div>
       ) : (
         <div
           className="w-100 h-100"
