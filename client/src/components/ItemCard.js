@@ -1,8 +1,9 @@
 import { Card } from "react-bootstrap";
 import { useState } from "react";
 import itineraryService from "../api/ItineraryControllerAPI";
+import Button from "react-bootstrap/esm/Button";
 
-function ItemCard({ item, altText, itemType, itineraryItemId }) {
+function ItemCard({ item, altText, itemType, itineraryItemId, itineraryId, date, fetchData, renderButton, onButtonClic, handleAdd, index }) {
 
   const [showButtons, setShowButtons] = useState(false);
   const [type, setType] = useState(itemType);
@@ -14,7 +15,6 @@ function ItemCard({ item, altText, itemType, itineraryItemId }) {
   function handleMouseLeave() {
     setShowButtons(false);
   }
-  
 
   const deleteItineraryItem = async () => {
     try {
@@ -45,14 +45,15 @@ function ItemCard({ item, altText, itemType, itineraryItemId }) {
   return (
     <Card className="shadow border h-100 m-1">
       {item == null || typeof item === 'undefined' || typeof type === 'undefined' ? (
-        <a href="#" className="h-100">
           <div className="h-100 container d-flex rounded justify-content-center align-items-center border border-primary">
             <div className="align-items-center text-center ">
               {altText}
-              <h2 className="bi bi-plus-lg"></h2>
+              <p></p>
+              <Button onClick={() => handleAdd()}>
+                <i className="bi bi-plus-lg"></i>
+              </Button>
             </div>
           </div>
-        </a>
       ) : (
         <div
           className="w-100 h-100"
