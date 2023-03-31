@@ -1,62 +1,59 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import ItineraryService from "../api/ItineraryControllerAPI";
+import Select from "react-select";
 
-function AddAccommodationModal({ show, handleClose, fetchData, handleAddAccommodation, itineraryItemId }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
-  const [price, setPrice] = useState('0');
+function AddAccommodationModal({ show, handleClose, fetchData, handleAddAccommodation, itineraryItemId, accommodationOptions, date }) {
+
+  const [accommodationId, setAccommodationId] = useState('');
 
   const handleSubmit = (e) => { 
     e.preventDefault();
-    const addAccommodation = {
-        name: name,
-        description: description,
-        image: image,
-        price: price
-      };
-  
-      console.log(addAccommodation);
 
-      ItineraryService.addAccommodationItem(itineraryItemId, addAccommodation)
-      .then(response => {
-        fetchData();
-        handleClose();
-        handleAddAccommodation(response.data); // Pass the newly added destination to handleAddDestination
-      })
-      .catch(error => {
-        console.log(error);
-      })
-    handleClose();    
+    const addAccommodation = {
+      accommodation: {"id": accommodationId},
+      startDate: date,
+      endDate: date
+    };
+  
+    console.log(addAccommodation);
+
+    ItineraryService.updateItineraryItem(itineraryItemId, addAccommodation)
+    .then(() => {
+      fetchData();
+      handleClose();
+    })
+    .catch(error => {
+      console.log(error);
+    })
+
+    handleClose();   
   };
 
   return (
     <>
-    <div className="row mx-auto">
+      <div className="row mx-auto">
 
-    <Modal centered show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Add Accommodation</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-      <form onSubmit={handleSubmit}>
+        <Modal centered show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Accommodation</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <form onSubmit={handleSubmit}>
+
               <div className="form-floating mb-3">
-                <input type="text" required className="form-control" placeholder="Name of trip" onChange={(e) => setName(e.target.value)} />
-                <label>Accommodation Name</label>
+                <Select
+                  required
+                  className=""
+                  options={accommodationOptions}
+                  placeholder="Accommodation"
+                  noOptionsMessage={() => "No results"}
+                  onChange={(selectedOption) => 
+                    setAccommodationId(selectedOption.value)}
+                />
               </div>
-              <div className="form-floating mb-3">
-                <input type="text" required className="form-control" placeholder="Description of Accommodation" onChange={(e) => setDescription(e.target.value)} />
-                <label>Description</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input type="text" required className="form-control" placeholder="Image URL" onChange={(e) => setImage(e.target.value)} />
-                <label>Image URL</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input type="number" required className="form-control" placeholder="Price" onChange={(e) => setPrice(e.target.value)} />
-                <label>Price</label>
-              </div>
+
               <button className="btn btn-primary text-white w-100" type="submit">
                 Add new accommodation
               </button>

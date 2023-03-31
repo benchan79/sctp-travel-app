@@ -4,7 +4,7 @@ import ItineraryService from "../api/ItineraryControllerAPI";
 import Select from "react-select";
 
 
-function AddDestinationModal({ show, handleClose, fetchData, handleAddDestination, itineraryItemId, destinationOptions }) {
+function AddDestinationModal({ show, handleClose, fetchData, itineraryItemId, destinationOptions, date }) {
 
   const [destinationId, setDestinationId] = useState('');
 
@@ -12,7 +12,9 @@ function AddDestinationModal({ show, handleClose, fetchData, handleAddDestinatio
     e.preventDefault();
 
     const addDestination = {
-      destination: {"id": destinationId}
+      destination: {"id": destinationId},
+      startDate: date,
+      endDate: date
     };
   
     console.log(addDestination);
@@ -25,7 +27,6 @@ function AddDestinationModal({ show, handleClose, fetchData, handleAddDestinatio
       .catch(error => {
         console.log(error);
       })
-    fetchData();
     handleClose();    
   };
 
@@ -38,11 +39,6 @@ function AddDestinationModal({ show, handleClose, fetchData, handleAddDestinatio
           </Modal.Header>
           <Modal.Body>
             <form onSubmit={handleSubmit}>
-
-              {/* <div className="form-floating mb-3">
-                <input type="text" required className="form-control" placeholder="Name of trip" onChange={(e) => setName(e.target.value)} />
-                <label>Name of destination</label>
-              </div> */}
 
               <div className="form-floating mb-3">
                 <Select

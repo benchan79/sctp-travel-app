@@ -4,6 +4,7 @@ import ItemCard from "./ItemCard";
 import AddDestinationModal from "./AddDestinationModal";
 import AddAccommodationModal from "./AddAccommodationModal";
 import AddTransportModal from "./AddTransportModal";
+import AddItineraryItemModal from "./AddItineraryItemModal";
 
 function DailyItinerary({
   id,
@@ -33,21 +34,16 @@ function DailyItinerary({
     };
   }
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const [showAdd, setShowAdd] = useState(false);
-
+  const [showItineraryItemModal, setShowItineraryItemModal] = useState(false);
   const [showDestinationModal, setShowDestinationModal] = useState(false);
   const [showAccommodationModal, setShowAccommodationModal] = useState(false);
   const [showTransportModal, setShowTransportModal] = useState(false);
 
+  const handleShowItineraryItemModal = () => setShowItineraryItemModal(true);
+  const handleCloseItineraryItemModal = () => {setShowItineraryItemModal(false)};
+
   const handleShowDestinationModal = () => setShowDestinationModal(true);
-  const handleCloseDestinationModal = () => {
-    fetchData();
-    setShowDestinationModal(false)
-  };
+  const handleCloseDestinationModal = () => {setShowDestinationModal(false)};
 
   const handleCloseAccommodationModal = () => setShowAccommodationModal(false);
   const handleShowAccommodationModal = () => setShowAccommodationModal(true);
@@ -55,11 +51,27 @@ function DailyItinerary({
   const handleCloseTransportModal = () => setShowTransportModal(false);
   const handleShowTransportModal = () => setShowTransportModal(true);
 
-
   return (
     <Card className="mb-3 border rounded">
       <Card.Header> Day {dayNumber}  </Card.Header>
-      <Card.Header> ({name} - {description}) </Card.Header>
+      <Card.Header> 
+        {id ? `${name} - ${description}` :
+        <Button onClick={() => handleShowItineraryItemModal()}>
+          <i className="bi bi-plus-lg"></i>
+        </Button>
+        }
+        <AddItineraryItemModal
+          show={showItineraryItemModal} // show = true or false
+          handleClose={handleCloseItineraryItemModal} 
+          handleShow={handleShowItineraryItemModal} 
+          fetchData={fetchData}
+          itineraryId={itineraryId}
+          destinationOptions={destinationOptions}
+          accommodationOptions={accommodationOptions}
+          transportOptions={transportOptions}
+          date={date}
+        />
+      </Card.Header>
       <Card.Body>
         <div className="d-flex" style={{ height: "18rem" }}>
           <div className="w-50 h-100 ">
@@ -81,8 +93,10 @@ function DailyItinerary({
               fetchData={fetchData}
               itineraryItemId={id}
               destinationOptions={destinationOptions}
+              date={date}
             />
           </div>
+
           <div className="w-50">
             <CardGroup className="h-100">
               <ItemCard 
@@ -93,8 +107,18 @@ function DailyItinerary({
                 itineraryId={itineraryId}
                 date={date}
                 fetchData={fetchData}
-
+                handleAdd={handleShowAccommodationModal} // set show modal to true
               />
+              <AddAccommodationModal
+                show={showAccommodationModal} // show = true or false
+                handleClose={handleCloseAccommodationModal} 
+                handleShow={handleShowAccommodationModal} 
+                fetchData={fetchData}
+                itineraryItemId={id}
+                accommodationOptions={accommodationOptions}
+                date={date}
+              />
+
               <ItemCard 
                 item={transport} 
                 altText="Add transport" 
@@ -103,7 +127,18 @@ function DailyItinerary({
                 itineraryId={itineraryId}
                 date={date}
                 fetchData={fetchData}
+                handleAdd={handleShowTransportModal}
               />
+              <AddTransportModal
+                show={showTransportModal} // show = true or false
+                handleClose={handleCloseTransportModal} 
+                handleShow={handleShowTransportModal} 
+                fetchData={fetchData}
+                itineraryItemId={id}
+                transportOptions={transportOptions}
+                date={date}
+              />
+
             </CardGroup>
           </div>
         </div>

@@ -49,7 +49,12 @@ function ItemCard({ item, altText, itemType, itineraryItemId, itineraryId, date,
             <div className="align-items-center text-center ">
               {altText}
               <p></p>
-              <Button onClick={() => handleAdd()}>
+              <Button 
+                onClick={() => {
+                  handleAdd();
+                  setType("");
+                }}
+              >
                 <i className="bi bi-plus-lg"></i>
               </Button>
             </div>
